@@ -251,6 +251,7 @@ protected:
     // Add helper functions here
     int calculateTreeHeight(Node<Key, Value>* root);
     Node<Key, Value>* internalFindHelper(Node<Key, Value>* root, const Key& k) const;
+    void clearHelper(Node<Key, Value>* root);
 
 
 protected:
@@ -459,6 +460,53 @@ template<class Key, class Value>
 void BinarySearchTree<Key, Value>::insert(const std::pair<const Key, Value> &keyValuePair)
 {
     // TODO
+    // For insert we need to check the where the inserted KVP needs to be easy stuff
+    // Extract information for the creation of new node 
+    Key key = keyValuePair.first;
+    Value value = keyValuePair.second;
+
+    if (empty()) {
+        // this means we can just insert into the tree
+        root_ = new Node<Key, Value> (key, value, nullptr);
+    }
+    else {
+        // we have work to do, need to iterate through and find place for new item
+        Node<Key, Value>* root = root_;
+        while (root != nullptr) {
+            Key rootKey = root->getKey();
+            if (key < rootKey) {
+                // this means that we need to traverse to the left subtree
+                Node<Key, Value>* leftNode = root->getLeft();
+                if (leftNode != nullptr) {
+                    root = leftNode;
+                }
+                // if there is no left node that means that this is where the inserted 
+                // noded needs to be placed 
+                else {
+                    // Node<Key, Value>* freshNode = new Node<Key, Value>* (key, value, root);
+                    root->setLeft(new Node<Key, Value> (key, value, root)); // the root should be the parent in this case here
+                    return;
+                }
+            }
+            else if (key > rootKey) {
+                // traverse right
+                Node<Key, Value>* rightNode = root->getRight();
+                if (rightNode != nullptr) {
+                    root = rightNode;
+                }
+                else {
+                    // Node<Key, Value>* freshNode = new Node<Key, Value>* (key, value, root);
+                    root->setRight(new Node<Key, Value> (key, value, root));
+                    return;
+                }
+            }
+            else {
+                // the key is already in the tree and needs to be overwritten with the current key
+                root->setValue(value);
+                return;
+            }
+        }
+    }
 }
 
 
@@ -514,6 +562,19 @@ void BinarySearchTree<Key, Value>::clear()
     // and then set those nodes to null and then attack each level of the 
     // tree from the most depth to the centralized root that way there is no 
     // memory leaks or nodes left out when clearing the tree - most effective
+    clearHelper(root_);
+}
+
+template<typename Key, typename Value>
+void clearHelper(Node<Key, Value>* root) {
+    if (root == nullptr) {
+        return;
+    }
+    else {
+        clearHelper(root->getLeft());
+        clearHelper(root->getRight());
+        delete root;
+    }
 }
 
 
@@ -592,7 +653,7 @@ bool BinarySearchTree<Key, Value>::isBalanced() const
 	bool l = isBalanced(root_->left);
 	bool r = isBalanced(root_->right);
 
-	//If all nodes are balanced return true!
+	// If all nodes are balanced return true!
 	if (l && r) {
 		return true;
 	}
