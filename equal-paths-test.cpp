@@ -62,11 +62,11 @@ int main()
   c = new Node(3);
   d = new Node(4);
 
-  test1("Test1");
-  test2("Test2");
-  test3("Test3");
-  test4("Test4");
-  test5("Test5");
+  test1("Test1"); // true
+  test2("Test2"); // false
+  test3("Test3"); // true
+  test4("Test4"); // false
+  test5("Test5"); // should return false
  
   delete a;
   delete b;
