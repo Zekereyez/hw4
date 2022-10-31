@@ -465,7 +465,7 @@ void BinarySearchTree<Key, Value>::insert(const std::pair<const Key, Value> &key
     Key key = keyValuePair.first;
     Value value = keyValuePair.second;
 
-    if (empty()) {
+    if (empty()) { // tests
         // this means we can just insert into the tree
         root_ = new Node<Key, Value> (key, value, nullptr);
     }
