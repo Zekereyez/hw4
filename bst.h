@@ -638,7 +638,7 @@ void BinarySearchTree<Key, Value>::clear()
 }
 
 template<typename Key, typename Value>
-void clearHelper(Node<Key, Value>* root) {
+void BinarySearchTree<Key, Value>::clearHelper(Node<Key, Value>* root) {
     if (root == nullptr) {
         return;
     }
