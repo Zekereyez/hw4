@@ -525,14 +525,14 @@ template<typename Key, typename Value>
 void BinarySearchTree<Key, Value>::remove(const Key& key)
 {
     // Difficult method for this damn bst
-    Node<Key, Value>* foundNode = internalFind(key);
-    if (foundNode == nullptr) {
-        return;
-    }
-    // this means that the node is valid and we can perform the 
-    // swap and deletion of the node 
-    nodeSwap(foundNode, predecessor(foundNode)); // a predecessor is a leaf node ie no children
-    delete foundNode;
+    // Node<Key, Value>* foundNode = internalFind(key);
+    // if (foundNode == nullptr) {
+    //     return;
+    // }
+    // // this means that the node is valid and we can perform the 
+    // // swap and deletion of the node 
+    // nodeSwap(foundNode, predecessor(foundNode)); // a predecessor is a leaf node ie no children
+    // delete foundNode;
 
 
     Node<Key, Value>* currNode = root_;
@@ -568,7 +568,7 @@ void BinarySearchTree<Key, Value>::remove(const Key& key)
                 }
                 else {
                     // do I need to delete the root? this would delete the bst?
-                    currNode->setValue(nullptr);
+                    // currNode->setValue(nullptr);
                     return; // no work to do with a single node tree
                 }
             }
