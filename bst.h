@@ -256,7 +256,7 @@ protected:
     static int calculateTreeHeight(Node<Key, Value>* root);
     static bool isBalancedHelper(Node<Key, Value>* root);
     Node<Key, Value>* internalFindHelper(Node<Key, Value>* root, const Key& k) const;
-    void clearHelper(Node<Key, Value>* root);
+    static void clearHelper(Node<Key, Value>* root);
 
 
 protected:
