@@ -25,6 +25,7 @@ int main(int argc, char *argv[])
     }
     cout << "Erasing b" << endl;
     bt.remove('b');
+    cout << "Removed b" << endl;
 
     // AVL Tree Tests
     AVLTree<char,int> at;
