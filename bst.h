@@ -381,6 +381,7 @@ template<typename Key, typename Value>
 BinarySearchTree<Key, Value>::~BinarySearchTree()
 {
     // TODO - Probably call clear or sum
+    clear();
 
 }
 
@@ -522,7 +523,7 @@ void BinarySearchTree<Key, Value>::insert(const std::pair<const Key, Value> &key
 template<typename Key, typename Value>
 void BinarySearchTree<Key, Value>::remove(const Key& key)
 {
-    // TODO
+    // Difficult method for this damn bst
     Node<Key, Value>* foundNode = internalFind(key);
     if (foundNode == nullptr) {
         return;
@@ -560,8 +561,6 @@ BinarySearchTree<Key, Value>::successor(Node<Key, Value>* current)
     }
     // otherwise we just return the right most parent
     return getRightMostParent(current);
-
-
 }
 
 
@@ -694,8 +693,8 @@ bool BinarySearchTree<Key, Value>::isBalanced() const
 	}
 
 	// Get the heights of the left and right subtrees 
-	int leftTree = calculateHeightIfBalanced(root_->left);
-	int rightTree = calculateHeightIfBalanced(root_->right);
+	int leftTree = calculateHeightIfBalanced(root_->getLeft());
+	int rightTree = calculateHeightIfBalanced(root_->getRight());
 	// Determine if this node is balanced! If not return false!
 	int bal = rightTree - leftTree;
 	if (bal > 1 || bal < -1 ) {
@@ -703,8 +702,8 @@ bool BinarySearchTree<Key, Value>::isBalanced() const
 	}
 	// Check if there are subtrees under us
 	// Are they balanced?
-	bool l = isBalanced(root_->left);
-	bool r = isBalanced(root_->right);
+	bool l = isBalanced(root_->getLeft());
+	bool r = isBalanced(root_->getRight());
 
 	// If all nodes are balanced return true!
 	if (l && r) {
@@ -723,7 +722,7 @@ int BinarySearchTree<Key, Value>::calculateTreeHeight(Node<Key, Value>* root) {
     }
 	// counts height
 	else {
-		return 1 + std::max(calculateHeightIfBalanced(root->left), calculateHeightIfBalanced(root->right));
+		return 1 + std::max(calculateHeightIfBalanced(root->getLeft()), calculateHeightIfBalanced(root->getRight()));
 	}
 }
 
