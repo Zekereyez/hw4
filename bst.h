@@ -254,7 +254,8 @@ protected:
     static Node<Key, Value>* getRightMostParent(Node<Key, Value>* node);
     static Node<Key, Value>* getLeftMostParent(Node<Key, Value>* node);
     static int calculateTreeHeight(Node<Key, Value>* root);
-    static bool BinarySearchTree<Key, Value>::isBalanced() const;
+    static bool isBalanced() const;
+    static bool isBalancedHelper(Node<Key, Value>* root);
     Node<Key, Value>* internalFindHelper(Node<Key, Value>* root, const Key& k) const;
     void clearHelper(Node<Key, Value>* root);
 
@@ -687,15 +688,23 @@ Node<Key, Value>* BinarySearchTree<Key, Value>::internalFindHelper(Node<Key, Val
  */
 template<typename Key, typename Value>
 bool BinarySearchTree<Key, Value>::isBalanced() const
-{
+{   
+
+    // call isBalancedHelper
+    return isBalancedHelper(root_);
+    
+}
+
+template<typename Key, typename Value>
+bool isBalancedHelper(Node<Key, Value>* root) {
     // implement the same thing as in the lab
-    if (root_ == NULL) {
+    if (root == NULL) {
 		return true;
 	}
 
 	// Get the heights of the left and right subtrees 
-	int leftTree = calculateHeightIfBalanced(root_->getLeft());
-	int rightTree = calculateHeightIfBalanced(root_->getRight());
+	int leftTree = calculateHeightIfBalanced(root->getLeft());
+	int rightTree = calculateHeightIfBalanced(root->getRight());
 	// Determine if this node is balanced! If not return false!
 	int bal = rightTree - leftTree;
 	if (bal > 1 || bal < -1 ) {
@@ -703,8 +712,8 @@ bool BinarySearchTree<Key, Value>::isBalanced() const
 	}
 	// Check if there are subtrees under us
 	// Are they balanced?
-	bool l = isBalanced(root_->getLeft());
-	bool r = isBalanced(root_->getRight());
+	bool l = isBalancedHelper(root->getLeft());
+	bool r = isBalancedHelper(root->getRight());
 
 	// If all nodes are balanced return true!
 	if (l && r) {
@@ -723,7 +732,8 @@ int BinarySearchTree<Key, Value>::calculateTreeHeight(Node<Key, Value>* root) {
     }
 	// counts height
 	else {
-		return 1 + std::max(calculateHeightIfBalanced(root->getLeft()), calculateHeightIfBalanced(root->getRight()));
+		return 1 + std::max(calculateHeightIfBalanced(root->getLeft()), 
+        calculateHeightIfBalanced(root->getRight()));
 	}
 }
 
