@@ -640,7 +640,7 @@ BinarySearchTree<Key, Value>::getLeftMostParent(Node<Key, Value>* node) {
     while (currNode->getParent() != nullptr && currNode->getParent()->getLeft() == currNode) {
         currNode = currNode->getParent();
     }
-    return currNode;
+    return currNode->getParent();
 }
 
 template<typename Key, typename Value>
@@ -650,7 +650,7 @@ BinarySearchTree<Key, Value>::getRightMostParent(Node<Key, Value>* node) {
     while (currNode->getParent() != nullptr && currNode->getParent()->getRight() == currNode) {
         currNode = currNode->getParent();
     }
-    return currNode;
+    return currNode->getParent();
 }
 
 /**
