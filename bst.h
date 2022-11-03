@@ -533,6 +533,63 @@ void BinarySearchTree<Key, Value>::remove(const Key& key)
     // swap and deletion of the node 
     nodeSwap(foundNode, predecessor(foundNode)); // a predecessor is a leaf node ie no children
     delete foundNode;
+
+
+    Node<Key, Value>* currNode = root_;
+    Node<Key, Value>* parentNode = nullptr;
+    while (currNode != nullptr) {
+        if (key < currNode->getKey()) {
+            parentNode = currNode;
+            currNode = currNode->getLeft();
+        }
+        else if (key > currNode->getKey()) {
+            parentNode = currNode;
+            currNode = currNode->getRight();
+        }
+        else {
+            // found node but many cases now
+            // case for two children 
+            if (currNode->getRight() != nullptr && currNode->getLeft() != nullptr) {
+                // we swap with predecessor 
+                nodeSwap(currNode, predecessor(currNode));
+                delete currNode;
+            }
+            else if (parentNode == nullptr) {
+                // if no parent ie root node removal case
+                if (currNode->getLeft() != nullptr) {
+                    currNode->setValue(currNode->getLeft()->getKey());
+                    currNode->setRight(currNode->getLeft()->getRight());
+                    currNode->setLeft(currNode->getLeft()->getLeft());
+                }
+                else if (currNode->getRight() != nullptr) {
+                    currNode->setValue(currNode->getRight()->getKey());
+                    currNode->setLeft(currNode->getRight()->getLeft());
+                    currNode->setRight(currNode->getRight()->getRight());
+                }
+                else {
+                    // do I need to delete the root? this would delete the bst?
+                    currNode->setValue(nullptr);
+                    return; // no work to do with a single node tree
+                }
+            }
+            else if (parentNode->getLeft() == currNode) {
+                if (currNode->getLeft() != nullptr) {
+                    parentNode->setLeft(currNode->getLeft());
+                }
+                else {
+                    parentNode->setLeft(currNode->getRight());
+                }
+            }
+            else if (parentNode->getRight() == currNode) {
+                if (currNode->getLeft() != nullptr) {
+                    parentNode->setLeft(currNode->getLeft());
+                }
+                else {
+                    parentNode->setLeft(currNode->getRight());
+                }
+            }
+        }
+    }
 }
 
 
