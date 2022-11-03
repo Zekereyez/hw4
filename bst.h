@@ -254,7 +254,6 @@ protected:
     static Node<Key, Value>* getRightMostParent(Node<Key, Value>* node);
     static Node<Key, Value>* getLeftMostParent(Node<Key, Value>* node);
     static int calculateTreeHeight(Node<Key, Value>* root);
-    bool isBalanced() const;
     static bool isBalancedHelper(Node<Key, Value>* root);
     Node<Key, Value>* internalFindHelper(Node<Key, Value>* root, const Key& k) const;
     void clearHelper(Node<Key, Value>* root);
