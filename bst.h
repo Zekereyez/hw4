@@ -253,7 +253,8 @@ protected:
     static Node<Key, Value>* getRightMostChild(Node<Key, Value>* node);
     static Node<Key, Value>* getRightMostParent(Node<Key, Value>* node);
     static Node<Key, Value>* getLeftMostParent(Node<Key, Value>* node);
-    int calculateTreeHeight(Node<Key, Value>* root);
+    static int calculateTreeHeight(Node<Key, Value>* root);
+    static bool BinarySearchTree<Key, Value>::isBalanced() const;
     Node<Key, Value>* internalFindHelper(Node<Key, Value>* root, const Key& k) const;
     void clearHelper(Node<Key, Value>* root);
 
