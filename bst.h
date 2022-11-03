@@ -602,9 +602,7 @@ BinarySearchTree<Key, Value>::predecessor(Node<Key, Value>* current)
     if (current->getLeft() != nullptr) {
         return getRightMostChild(current->getLeft());
     }
-    else if (current->getParent() != nullptr) {
-        return getLeftMostParent(current);
-    }
+    return getLeftMostParent(current);
 }
 
 template<class Key, class Value>
