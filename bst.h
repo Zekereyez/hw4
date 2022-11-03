@@ -240,7 +240,6 @@ protected:
     Node<Key, Value>* internalFind(const Key& k) const; // TODO
     Node<Key, Value> *getSmallestNode() const;  // TODO
     static Node<Key, Value>* predecessor(Node<Key, Value>* current); // TODO
-    static Node<Key, Value>* successor(Node<Key, Value>* current);
     // Note:  static means these functions don't have a "this" pointer
     //        and instead just use the input argument.
 
@@ -249,6 +248,11 @@ protected:
     virtual void nodeSwap( Node<Key,Value>* n1, Node<Key,Value>* n2) ;
 
     // Add helper functions here
+    static Node<Key, Value>* successor(Node<Key, Value>* current);
+    static Node<Key, Value>* getLeftMostChild(Node<Key, Value>* node);
+    static Node<Key, Value>* getRightMostChild(Node<Key, Value>* node);
+    static Node<Key, Value>* getRightMostParent(Node<Key, Value>* node);
+    static Node<Key, Value>* getLeftMostParent(Node<Key, Value>* node);
     int calculateTreeHeight(Node<Key, Value>* root);
     Node<Key, Value>* internalFindHelper(Node<Key, Value>* root, const Key& k) const;
     void clearHelper(Node<Key, Value>* root);
@@ -465,7 +469,7 @@ void BinarySearchTree<Key, Value>::insert(const std::pair<const Key, Value> &key
     Key key = keyValuePair.first;
     Value value = keyValuePair.second;
 
-    if (empty()) { // tests
+    if (empty()) {
         // this means we can just insert into the tree
         root_ = new Node<Key, Value> (key, value, nullptr);
     }
@@ -536,6 +540,12 @@ Node<Key, Value>*
 BinarySearchTree<Key, Value>::predecessor(Node<Key, Value>* current)
 {
     // TODO
+    if (current->getLeft() != nullptr) {
+        return getRightMostChild(current->getLeft());
+    }
+    else if (current->getParent() != nullptr) {
+        return getLeftMostParent(current);
+    }
 }
 
 template<class Key, class Value>
@@ -545,6 +555,11 @@ BinarySearchTree<Key, Value>::successor(Node<Key, Value>* current)
     // Get the successor of the given node ie leftmost node of the 
     // right subtree
     // Node<Key, Value>* currNode = current;
+    if (current->getRight() != nullptr) {
+        return getLeftMostChild(current->getRight());
+    }
+    // otherwise we just return the right most parent
+    return getRightMostParent(current);
 
 
 }
@@ -590,14 +605,52 @@ BinarySearchTree<Key, Value>::getSmallestNode() const
     if (empty()) {
         return nullptr;
     }
+    // Just use the leftMostChild function here
+    Node<Key, Value>* smallestNode = root_;
+    return getLeftMostChild(smallestNode);
+}
+
+template<typename Key, typename Value>
+Node<Key, Value>*
+BinarySearchTree<Key, Value>::getLeftMostChild(Node<Key, Value>* node) {
     // Looping here is more ideal since it will always run 
     // in n time but we are doing this in constant space 
     // rather than n space with recursive calls
-    Node<Key, Value>* smallestNode = root_;
-    while (smallestNode->getLeft() != nullptr) {
-        smallestNode = smallestNode->getLeft();
+    Node<Key, Value>* currNode = node;
+    while (currNode->getLeft() != nullptr) {
+        currNode = currNode->getLeft();
     }
-    return smallestNode;
+    return currNode;
+}
+
+template<typename Key, typename Value>
+Node<Key, Value>*
+BinarySearchTree<Key, Value>::getRightMostChild(Node<Key, Value>* node) {
+    Node<Key, Value>* currNode = node;
+    while (currNode->getRight() != nullptr) {
+        currNode = currNode->getRight();
+    }
+    return currNode;
+}
+
+template<typename Key, typename Value>
+Node<Key, Value>*
+BinarySearchTree<Key, Value>::getLeftMostParent(Node<Key, Value>* node) {
+    Node<Key, Value>* currNode = node;
+    while (currNode->getParent() != nullptr && currNode->getParent()->getLeft() == currNode) {
+        currNode = currNode->getParent();
+    }
+    return currNode;
+}
+
+template<typename Key, typename Value>
+Node<Key, Value>*
+BinarySearchTree<Key, Value>::getRightMostParent(Node<Key, Value>* node) {
+    Node<Key, Value>* currNode = node;
+    while (currNode->getParent() != nullptr && currNode->getParent()->getRight() == currNode) {
+        currNode = currNode->getParent();
+    }
+    return currNode;
 }
 
 /**
