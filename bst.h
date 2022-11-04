@@ -591,12 +591,8 @@ void BinarySearchTree<Key, Value>::remove(const Key& key)
                 }
             }
         }
+        return; // work is all done here 
     }
-}
-
-template<typename Key, typename Value>
-void BinarySearchTree<Key, Value>::removeHelper(const Key& key, Node<Key, Value>* parentNode = nullptr) {
-
 }
 
 
