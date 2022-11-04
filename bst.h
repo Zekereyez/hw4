@@ -248,6 +248,8 @@ protected:
     virtual void nodeSwap( Node<Key,Value>* n1, Node<Key,Value>* n2) ;
 
     // Add helper functions here
+    Node<Key, Value>* internalFindHelper(Node<Key, Value>* root, const Key& k) const;
+    void removeHelper(const Key& key, Node<Key, Value>* parentNode = nullptr);
     static Node<Key, Value>* successor(Node<Key, Value>* current);
     static Node<Key, Value>* getLeftMostChild(Node<Key, Value>* node);
     static Node<Key, Value>* getRightMostChild(Node<Key, Value>* node);
@@ -255,7 +257,6 @@ protected:
     static Node<Key, Value>* getLeftMostParent(Node<Key, Value>* node);
     static int calculateTreeHeight(Node<Key, Value>* root);
     static bool isBalancedHelper(Node<Key, Value>* root);
-    Node<Key, Value>* internalFindHelper(Node<Key, Value>* root, const Key& k) const;
     static void clearHelper(Node<Key, Value>* root);
 
 
@@ -569,6 +570,7 @@ void BinarySearchTree<Key, Value>::remove(const Key& key)
                 else {
                     // do I need to delete the root? this would delete the bst?
                     // currNode->setValue(nullptr);
+                    root_ = nullptr;
                     return; // no work to do with a single node tree
                 }
             }
@@ -577,7 +579,7 @@ void BinarySearchTree<Key, Value>::remove(const Key& key)
                     parentNode->setLeft(currNode->getLeft());
                 }
                 else {
-                    parentNode->setLeft(currNode->getRight());
+                    parentNode->setRight(currNode->getRight());
                 }
             }
             else if (parentNode->getRight() == currNode) {
@@ -585,11 +587,16 @@ void BinarySearchTree<Key, Value>::remove(const Key& key)
                     parentNode->setLeft(currNode->getLeft());
                 }
                 else {
-                    parentNode->setLeft(currNode->getRight());
+                    parentNode->setRight(currNode->getRight());
                 }
             }
         }
     }
+}
+
+template<typename Key, typename Value>
+void BinarySearchTree<Key, Value>::removeHelper(const Key& key, Node<Key, Value>* parentNode = nullptr) {
+
 }
 
 
