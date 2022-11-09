@@ -558,12 +558,14 @@ void BinarySearchTree<Key, Value>::remove(const Key& key)
             else if (parentNode == nullptr) {
                 // if no parent ie root node removal case
                 if (currNode->getLeft() != nullptr) {
-                    currNode->setValue(currNode->getLeft()->getKey());
+                    // auto item = currNode->getItem();
+                    // currNode->getValue
+                    currNode->setValue(currNode->getLeft()->getValue());
                     currNode->setRight(currNode->getLeft()->getRight());
                     currNode->setLeft(currNode->getLeft()->getLeft());
                 }
                 else if (currNode->getRight() != nullptr) {
-                    currNode->setValue(currNode->getRight()->getKey());
+                    currNode->setValue(currNode->getRight()->getValue());
                     currNode->setLeft(currNode->getRight()->getLeft());
                     currNode->setRight(currNode->getRight()->getRight());
                 }
@@ -753,15 +755,15 @@ bool BinarySearchTree<Key, Value>::isBalanced() const
 }
 
 template<typename Key, typename Value>
-bool isBalancedHelper(Node<Key, Value>* root) {
+bool BinarySearchTree<Key, Value>::isBalancedHelper(Node<Key, Value>* root) {
     // implement the same thing as in the lab
     if (root == NULL) {
 		return true;
 	}
 
 	// Get the heights of the left and right subtrees 
-	int leftTree = calculateHeightIfBalanced(root->getLeft());
-	int rightTree = calculateHeightIfBalanced(root->getRight());
+	int leftTree = calculateTreeHeight(root->getLeft());
+	int rightTree = calculateTreeHeight(root->getRight());
 	// Determine if this node is balanced! If not return false!
 	int bal = rightTree - leftTree;
 	if (bal > 1 || bal < -1 ) {
@@ -789,8 +791,8 @@ int BinarySearchTree<Key, Value>::calculateTreeHeight(Node<Key, Value>* root) {
     }
 	// counts height
 	else {
-		return 1 + std::max(calculateHeightIfBalanced(root->getLeft()), 
-        calculateHeightIfBalanced(root->getRight()));
+		return 1 + std::max(calculateTreeHeight(root->getLeft()), 
+        calculateTreeHeight(root->getRight()));
 	}
 }
 
