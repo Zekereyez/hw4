@@ -516,7 +516,6 @@ void BinarySearchTree<Key, Value>::insert(const std::pair<const Key, Value> &key
     }
 }
 
-
 /**
 * A remove method to remove a specific key from a Binary Search Tree.
 * Recall: The writeup specifies that if a node has 2 children you
@@ -526,16 +525,6 @@ template<typename Key, typename Value>
 void BinarySearchTree<Key, Value>::remove(const Key& key)
 {
     // Difficult method for this damn bst
-    // Node<Key, Value>* foundNode = internalFind(key);
-    // if (foundNode == nullptr) {
-    //     return;
-    // }
-    // // this means that the node is valid and we can perform the 
-    // // swap and deletion of the node 
-    // nodeSwap(foundNode, predecessor(foundNode)); // a predecessor is a leaf node ie no children
-    // delete foundNode;
-
-
     Node<Key, Value>* currNode = root_;
     Node<Key, Value>* parentNode = nullptr;
     while (currNode != nullptr) {
@@ -552,8 +541,63 @@ void BinarySearchTree<Key, Value>::remove(const Key& key)
             // case for two children 
             if (currNode->getRight() != nullptr && currNode->getLeft() != nullptr) {
                 // we swap with predecessor 
-                nodeSwap(currNode, predecessor(currNode));
+                Node<Key, Value>* bestNode = predecessor(currNode);
+                // the appropriate parents have been set for the nodes here 
+                // so there is no need to make any changes to them 
+                // Note: parentNode currently points to the parent of 
+                nodeSwap(currNode, bestNode);
+                // bestNode->setParent(parentNode);
+                parentNode = currNode->getParent();
+                Node<Key, Value>* childNode;
+                // no children on swap case
+                if (currNode->getLeft() == nullptr && currNode->getRight() == nullptr) {
+                    childNode = nullptr;
+                }
+                // otherwise then the node must have at least one node by definition
+                else if (currNode->getLeft() != nullptr) {
+                    childNode = currNode->getLeft();
+                }
+                else if (currNode->getRight() != nullptr) {
+                    childNode = currNode->getRight();
+                }
+                // makes check to see if parentNode isnt null ie at root node
+                // if (parentNode != nullptr) {
+                //     if (parentNode->getRight() == currNode) {
+                //     parentNode->setRight(bestNode);
+                //     }
+                //     else if (parentNode->getLeft() == currNode) {
+                //         parentNode->setLeft(bestNode);
+                //     }
+                // }
+                if (parentNode == nullptr) {
+                    // root_ = bestNode;
+                    root_ = childNode;
+                }
+                else {
+                    if (parentNode->getLeft() == currNode) {
+                        // do something here
+                        parentNode->setLeft(childNode);
+                    }
+                    else {
+                        // do the opposite
+                        parentNode->setRight(childNode);
+                    }
+                }
+                if (childNode != nullptr) {
+                    childNode->setParent(parentNode);
+                }
+                // predecessor is always on the left side of a given node
+                // as by definition right most of left substree
+                // if (bestNode->getLeft() == currNode && root_ == bestNode) {
+                //     bestNode->setLeft(bestNode->getLeft()->getLeft());
+                // }
+                // if ((currNode->getLeft() != nullptr) && 
+                // (currNode->getParent() != nullptr)) {
+                //     currNode->getLeft()->setParent(bestNode);
+                //     currNode->getParent()->setLeft(bestNode);
+                // }
                 delete currNode;
+                currNode = nullptr;
             }
             else if (parentNode == nullptr) {
                 // if no parent ie root node removal case
@@ -584,7 +628,10 @@ void BinarySearchTree<Key, Value>::remove(const Key& key)
                 }
                 else {
                     parentNode->setRight(currNode->getRight());
+
                 }
+                delete currNode;
+                currNode = nullptr;
             }
             else if (parentNode->getRight() == currNode) {
                 if (currNode->getLeft() != nullptr) {
@@ -593,13 +640,13 @@ void BinarySearchTree<Key, Value>::remove(const Key& key)
                 else {
                     parentNode->setRight(currNode->getRight());
                 }
+                delete currNode;
+                currNode = nullptr;
             }
         }
         return; // work is all done here 
     }
 }
-
-
 
 template<class Key, class Value>
 Node<Key, Value>*
