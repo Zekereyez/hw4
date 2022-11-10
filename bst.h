@@ -544,9 +544,9 @@ void BinarySearchTree<Key, Value>::remove(const Key& key)
                 Node<Key, Value>* bestNode = predecessor(currNode);
                 // the appropriate parents have been set for the nodes here 
                 // so there is no need to make any changes to them 
-                // Note: parentNode currently points to the parent of 
+                // Note: parentNode currently points to the parent of current
+                // location and we need to update accordingly when swapped
                 nodeSwap(currNode, bestNode);
-                // bestNode->setParent(parentNode);
                 parentNode = currNode->getParent();
                 Node<Key, Value>* childNode;
                 // no children on swap case
@@ -560,17 +560,7 @@ void BinarySearchTree<Key, Value>::remove(const Key& key)
                 else if (currNode->getRight() != nullptr) {
                     childNode = currNode->getRight();
                 }
-                // makes check to see if parentNode isnt null ie at root node
-                // if (parentNode != nullptr) {
-                //     if (parentNode->getRight() == currNode) {
-                //     parentNode->setRight(bestNode);
-                //     }
-                //     else if (parentNode->getLeft() == currNode) {
-                //         parentNode->setLeft(bestNode);
-                //     }
-                // }
                 if (parentNode == nullptr) {
-                    // root_ = bestNode;
                     root_ = childNode;
                 }
                 else {
@@ -586,16 +576,6 @@ void BinarySearchTree<Key, Value>::remove(const Key& key)
                 if (childNode != nullptr) {
                     childNode->setParent(parentNode);
                 }
-                // predecessor is always on the left side of a given node
-                // as by definition right most of left substree
-                // if (bestNode->getLeft() == currNode && root_ == bestNode) {
-                //     bestNode->setLeft(bestNode->getLeft()->getLeft());
-                // }
-                // if ((currNode->getLeft() != nullptr) && 
-                // (currNode->getParent() != nullptr)) {
-                //     currNode->getLeft()->setParent(bestNode);
-                //     currNode->getParent()->setLeft(bestNode);
-                // }
                 delete currNode;
                 currNode = nullptr;
             }
