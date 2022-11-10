@@ -508,7 +508,7 @@ void BinarySearchTree<Key, Value>::insert(const std::pair<const Key, Value> &key
                 }
             }
             else {
-                // the key is already in the tree and needs to be overwritten with the current key
+                // the key is already in the tree and needs to be overwritten with the current value
                 root->setValue(value);
                 return;
             }
@@ -558,22 +558,24 @@ void BinarySearchTree<Key, Value>::remove(const Key& key)
             else if (parentNode == nullptr) {
                 // if no parent ie root node removal case
                 if (currNode->getLeft() != nullptr) {
-                    // auto item = currNode->getItem();
-                    // currNode->getValue
-                    currNode->setValue(currNode->getLeft()->getValue());
-                    currNode->setRight(currNode->getLeft()->getRight());
-                    currNode->setLeft(currNode->getLeft()->getLeft());
+                    // Can I set the root to the next node then
+                    // delete the currNode so that it removes?
+                    root_ = currNode->getLeft();
+                    // reset the parent of the node
+                    // all other nodes are fine with the reassignment
+                    root_->setParent(nullptr);
+                    delete currNode;
+                    currNode = nullptr;
                 }
                 else if (currNode->getRight() != nullptr) {
-                    currNode->setValue(currNode->getRight()->getValue());
-                    currNode->setLeft(currNode->getRight()->getLeft());
-                    currNode->setRight(currNode->getRight()->getRight());
+                    root_ = currNode->getRight();
+                    root_->setParent(nullptr);
+                    delete currNode;
                 }
                 else {
-                    // do I need to delete the root? this would delete the bst?
-                    // currNode->setValue(nullptr);
+                    // set root to null then return 
                     root_ = nullptr;
-                    return; // no work to do with a single node tree
+                    return; // easy with a single node tree
                 }
             }
             else if (parentNode->getLeft() == currNode) {
@@ -638,6 +640,7 @@ void BinarySearchTree<Key, Value>::clear()
     // tree from the most depth to the centralized root that way there is no 
     // memory leaks or nodes left out when clearing the tree - most effective
     clearHelper(root_);
+    root_ = NULL;
 }
 
 template<typename Key, typename Value>
