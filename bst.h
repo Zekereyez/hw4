@@ -626,6 +626,7 @@ void BinarySearchTree<Key, Value>::remove(const Key& key)
         }
         return; // work is all done here 
     }
+    // TODO: Need to find valgrind error - small 
 }
 
 template<class Key, class Value>
