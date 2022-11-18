@@ -138,9 +138,40 @@ protected:
     virtual void nodeSwap( AVLNode<Key,Value>* n1, AVLNode<Key,Value>* n2);
 
     // Add helper functions here
+    static AVLNode<Key, Value>* blah ();
+    static void rightRotate(AVLNode<Key, Value>* node);
+    static void leftRotate(AVLNode<Key, Value>* node);
 
 
 };
+// Right rotation function
+template<class Key, class Value>
+void AVLTree<Key, Value>::rightRotate(AVLNode<Key, Value>* node) {
+  // this rotation function is simple and only handles the rotation of
+  // a single node given but the overview concept is that we will call 
+  // these functions on the nodes needed to perform the zigzig or zigzag
+
+  // If we right rotate on a parent then this means promote the child of p as 
+  // a child of the grandparent and then demote the parent to a child of its 
+  // child node 
+  auto parent = node->getParent();
+  auto rightChild = node->getRight();
+  auto leftChild = node->getLeft();
+  // need to check if parent has a parent aka g 
+  // if so this means that g must point to child 
+  if (parent->getParent() != nullptr && parent->getLeft() == node) {
+    node->getParent()->setLeft(leftChild);
+    // can we just node swap then swap so that the p is right child of n
+    nodeSwap(node, parent);
+    
+  }
+}
+
+// Left rotate function 
+template<class Key, class Value>
+void AVLTree<Key, Value>::leftRotate(AVLNode<Key, Value>* node) {
+   
+}
 
 /*
  * Recall: If key is already in the tree, you should 
@@ -149,7 +180,54 @@ protected:
 template<class Key, class Value>
 void AVLTree<Key, Value>::insert (const std::pair<const Key, Value> &new_item)
 {
-    // TODO
+    // TODO - From bst
+    // For insert we need to check the where the inserted KVP needs to be easy stuff
+    // Extract information for the creation of new node 
+  //   Key key = keyValuePair.first;
+  //   Value value = keyValuePair.second;
+
+  //   if (empty()) {
+  //     // this means we can just insert into the tree
+  //     root_ = new Node<Key, Value> (key, value, nullptr);
+  //   }
+  //   else {
+  //     // we have work to do, need to iterate through and find place for new item
+  //     Node<Key, Value>* root = root_;
+  //     while (root != nullptr) {
+  //         Key rootKey = root->getKey();
+  //         if (key < rootKey) {
+  //             // this means that we need to traverse to the left subtree
+  //             Node<Key, Value>* leftNode = root->getLeft();
+  //             if (leftNode != nullptr) {
+  //                 root = leftNode;
+  //             }
+  //             // if there is no left node that means that this is where the inserted 
+  //             // noded needs to be placed 
+  //             else {
+  //                 // Node<Key, Value>* freshNode = new Node<Key, Value>* (key, value, root);
+  //                 root->setLeft(new Node<Key, Value> (key, value, root)); // the root should be the parent in this case here
+  //                 return;
+  //             }
+  //         }
+  //         else if (key > rootKey) {
+  //             // traverse right
+  //             Node<Key, Value>* rightNode = root->getRight();
+  //             if (rightNode != nullptr) {
+  //                 root = rightNode;
+  //             }
+  //             else {
+  //                 // Node<Key, Value>* freshNode = new Node<Key, Value>* (key, value, root);
+  //                 root->setRight(new Node<Key, Value> (key, value, root));
+  //                 return;
+  //             }
+  //         }
+  //         else {
+  //             // the key is already in the tree and needs to be overwritten with the current value
+  //             root->setValue(value);
+  //             return;
+  //         }
+  //     }
+  // }
 }
 
 /*
