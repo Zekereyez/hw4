@@ -143,7 +143,7 @@ protected:
     static void leftRotate(AVLNode<Key, Value>* node);
     static void findBalance(AVLNode<Key, Value>* node);
     static void removeFix(AVLNode<Key, Value>* node, int diff);
-    
+
 
 };
 template<class Key, class Value>
@@ -299,7 +299,7 @@ void AVLTree<Key, Value>:: remove(const Key& key)
             // remove that node aka same as bst
             if (currNode->getRight() != nullptr && currNode->getLeft() != nullptr) {
                 // we swap with predecessor 
-                AVLNode<Key, Value>* bestNode = static_cast<AVLNode<Key,Value>*>(BinarySearchTree<Key, Value>::predecessor(currNode));
+                AVLNode<Key, Value>* bestNode = BinarySearchTree<Key, Value>::predecessor(currNode);
                 // the appropriate parents have been set for the nodes here 
                 // so there is no need to make any changes to them 
                 // Note: parentNode currently points to the parent of current
