@@ -153,7 +153,6 @@ void AVLTree<Key, Value>::findBalance(AVLNode<Key, Value>* node) {
     }
     int8_t balance = (int8_t)BinarySearchTree<Key, Value>::calculateTreeHeight(node->getRight) 
     - BinarySearchTree<Key, Value>::calculateTreeHeight(node->getLeft);
-    // if ()
 }
 
 // Right rotation function
@@ -173,15 +172,12 @@ void AVLTree<Key, Value>::rightRotate(AVLNode<Key, Value>* node) {
   auto rightChild = node->getRight();
   auto leftChild = node->getLeft();
   // need to account for root case
-//   if (BinarySearchTree<Key, Value>::root_ == static_cast<Node<Key, Value>*>(node)) {
-//     BinarySearchTree<Key, Value>::root_ = leftChild;
-//   }
+  
   // need to check if parent has a parent aka g 
   // if so this means that g must point to child 
   if (parent->getLeft() == node) {
     node->getParent()->setLeft(leftChild);
     // can we just node swap then swap so that the p is right child of n
-    // nodeSwap(node, parent);
   }
   
 }
@@ -201,7 +197,6 @@ void AVLTree<Key, Value>::leftRotate(AVLNode<Key, Value>* node) {
    // this means we can promote child and make the adjustments
    if (parent == nullptr) {
       // this means we are at the root and need to change
-    //   BinarySearchTree<Key, Value>::root_ = node;
    }
    else {
 
@@ -246,7 +241,6 @@ void AVLTree<Key, Value>::insert (const std::pair<const Key, Value> &new_item)
               // if there is no left node that means that this is where the inserted 
               // noded needs to be placed 
               else {
-                  // Node<Key, Value>* freshNode = new Node<Key, Value>* (key, value, root);
                   root->setLeft(new AVLNode<Key, Value> (key, value, root)); // the root should be the parent in this case here
                   return;
               }
@@ -258,7 +252,6 @@ void AVLTree<Key, Value>::insert (const std::pair<const Key, Value> &new_item)
                   root = rightNode;
               }
               else {
-                  // Node<Key, Value>* freshNode = new Node<Key, Value>* (key, value, root);
                   root->setRight(new AVLNode<Key, Value> (key, value, root));
                   return;
               }
