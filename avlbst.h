@@ -223,51 +223,51 @@ void AVLTree<Key, Value>::insert (const std::pair<const Key, Value> &new_item)
     // TODO - From bst
     // For insert we need to check the where the inserted KVP needs to be easy stuff
     // Extract information for the creation of new node 
-  //   Key key = keyValuePair.first;
-  //   Value value = keyValuePair.second;
+    Key key = keyValuePair.first;
+    Value value = keyValuePair.second;
 
-  //   if (empty()) {
-  //     // this means we can just insert into the tree
-  //     root_ = new Node<Key, Value> (key, value, nullptr);
-  //   }
-  //   else {
-  //     // we have work to do, need to iterate through and find place for new item
-  //     Node<Key, Value>* root = root_;
-  //     while (root != nullptr) {
-  //         Key rootKey = root->getKey();
-  //         if (key < rootKey) {
-  //             // this means that we need to traverse to the left subtree
-  //             Node<Key, Value>* leftNode = root->getLeft();
-  //             if (leftNode != nullptr) {
-  //                 root = leftNode;
-  //             }
-  //             // if there is no left node that means that this is where the inserted 
-  //             // noded needs to be placed 
-  //             else {
-  //                 // Node<Key, Value>* freshNode = new Node<Key, Value>* (key, value, root);
-  //                 root->setLeft(new Node<Key, Value> (key, value, root)); // the root should be the parent in this case here
-  //                 return;
-  //             }
-  //         }
-  //         else if (key > rootKey) {
-  //             // traverse right
-  //             Node<Key, Value>* rightNode = root->getRight();
-  //             if (rightNode != nullptr) {
-  //                 root = rightNode;
-  //             }
-  //             else {
-  //                 // Node<Key, Value>* freshNode = new Node<Key, Value>* (key, value, root);
-  //                 root->setRight(new Node<Key, Value> (key, value, root));
-  //                 return;
-  //             }
-  //         }
-  //         else {
-  //             // the key is already in the tree and needs to be overwritten with the current value
-  //             root->setValue(value);
-  //             return;
-  //         }
-  //     }
-  // }
+    if (empty()) {
+      // this means we can just insert into the tree
+      this->root_ = new AVLNode<Key, Value> (key, value, nullptr);
+    }
+    else {
+      // we have work to do, need to iterate through and find place for new item
+      AVLNode<Key, Value>* root = this->root_;
+      while (root != nullptr) {
+          Key rootKey = root->getKey();
+          if (key < rootKey) {
+              // this means that we need to traverse to the left subtree
+              AVLNode<Key, Value>* leftNode = root->getLeft();
+              if (leftNode != nullptr) {
+                  root = leftNode;
+              }
+              // if there is no left node that means that this is where the inserted 
+              // noded needs to be placed 
+              else {
+                  // Node<Key, Value>* freshNode = new Node<Key, Value>* (key, value, root);
+                  root->setLeft(new AVLNode<Key, Value> (key, value, root)); // the root should be the parent in this case here
+                  return;
+              }
+          }
+          else if (key > rootKey) {
+              // traverse right
+              AVLNode<Key, Value>* rightNode = root->getRight();
+              if (rightNode != nullptr) {
+                  root = rightNode;
+              }
+              else {
+                  // Node<Key, Value>* freshNode = new Node<Key, Value>* (key, value, root);
+                  root->setRight(new AVLNode<Key, Value> (key, value, root));
+                  return;
+              }
+          }
+          else {
+              // the key is already in the tree and needs to be overwritten with the current value
+              root->setValue(value);
+              return;
+          }
+      }
+  }
 }
 
 /*
