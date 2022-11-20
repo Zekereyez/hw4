@@ -16,7 +16,7 @@ struct KeyError { };
 * add additional data members or helper functions.
 */
 template <typename Key, typename Value>
-class AVLNode : public Node<Key, Value>
+class AVLNode : public AVLNode<Key, Value>
 {
 public:
     // Constructor/destructor.
@@ -29,7 +29,7 @@ public:
     void updateBalance(int8_t diff);
 
     // Getters for parent, left, and right. These need to be redefined since they
-    // return pointers to AVLNodes - not plain Nodes. See the Node class in bst.h
+    // return pointers to AVLNodes - not plain Nodes. See the AVLNode class in bst.h
     // for more information.
     virtual AVLNode<Key, Value>* getParent() const override;
     virtual AVLNode<Key, Value>* getLeft() const override;
@@ -51,7 +51,7 @@ protected:
 */
 template<class Key, class Value>
 AVLNode<Key, Value>::AVLNode(const Key& key, const Value& value, AVLNode<Key, Value> *parent) :
-    Node<Key, Value>(key, value, parent), balance_(0)
+    AVLNode<Key, Value>(key, value, parent), balance_(0)
 {
 
 }
@@ -172,7 +172,7 @@ void AVLTree<Key, Value>::rightRotate(AVLNode<Key, Value>* node) {
   auto rightChild = node->getRight();
   auto leftChild = node->getLeft();
   // need to account for root case
-  if (BinarySearchTree<Key, Value>::root_ == static_cast<Node<Key, Value>*>(node)) {
+  if (BinarySearchTree<Key, Value>::root_ == static_cast<AVLNode<Key, Value>*>(node)) {
     BinarySearchTree<Key, Value>::root_ = leftChild;
   }
   // need to check if parent has a parent aka g 
@@ -233,7 +233,7 @@ void AVLTree<Key, Value>::insert (const std::pair<const Key, Value> &new_item)
     }
     else {
       // we have work to do, need to iterate through and find place for new item
-      AVLNode<Key, Value>* root = this->root_;
+      AVLNode<Key, Value>* root = static_cast<AVLNode<Key,Value>*>(this->root_);
       while (root != nullptr) {
           Key rootKey = root->getKey();
           if (key < rootKey) {
@@ -245,7 +245,7 @@ void AVLTree<Key, Value>::insert (const std::pair<const Key, Value> &new_item)
               // if there is no left node that means that this is where the inserted 
               // noded needs to be placed 
               else {
-                  // Node<Key, Value>* freshNode = new Node<Key, Value>* (key, value, root);
+                  // AVLNode<Key, Value>* freshNode = new AVLNode<Key, Value>* (key, value, root);
                   root->setLeft(new AVLNode<Key, Value> (key, value, root)); // the root should be the parent in this case here
                   return;
               }
@@ -257,7 +257,7 @@ void AVLTree<Key, Value>::insert (const std::pair<const Key, Value> &new_item)
                   root = rightNode;
               }
               else {
-                  // Node<Key, Value>* freshNode = new Node<Key, Value>* (key, value, root);
+                  // AVLNode<Key, Value>* freshNode = new AVLNode<Key, Value>* (key, value, root);
                   root->setRight(new AVLNode<Key, Value> (key, value, root));
                   return;
               }
@@ -280,7 +280,7 @@ void AVLTree<Key, Value>:: remove(const Key& key)
 {
     // Find the node by walking the tree
     AVLNode<Key, Value>* currNode = static_cast<AVLNode<Key,Value>*>(this->root_);
-    Node<Key, Value>* parentNode = nullptr;
+    AVLNode<Key, Value>* parentNode = nullptr;
     int diff;
     while (currNode != nullptr) {
         if (key < currNode->getKey()) {
@@ -298,14 +298,14 @@ void AVLTree<Key, Value>:: remove(const Key& key)
             // remove that node aka same as bst
             if (currNode->getRight() != nullptr && currNode->getLeft() != nullptr) {
                 // we swap with predecessor 
-                Node<Key, Value>* bestNode = BinarySearchTree<Key, Value>::predecessor(currNode);
+                AVLNode<Key, Value>* bestNode = BinarySearchTree<Key, Value>::predecessor(currNode);
                 // the appropriate parents have been set for the nodes here 
                 // so there is no need to make any changes to them 
                 // Note: parentNode currently points to the parent of current
                 // location and we need to update accordingly when swapped
                 nodeSwap(currNode, bestNode);
                 parentNode = currNode->getParent();
-                Node<Key, Value>* childNode;
+                AVLNode<Key, Value>* childNode;
                 // no children on swap case
                 if (currNode->getLeft() == nullptr && currNode->getRight() == nullptr) {
                     childNode = nullptr;
