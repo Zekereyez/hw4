@@ -152,7 +152,7 @@ void AVLTree<Key, Value>::findBalance(AVLNode<Key, Value>* node) {
     }
     int8_t balance = (int8_t)BinarySearchTree<Key, Value>::calculateTreeHeight(node->getRight) 
     - BinarySearchTree<Key, Value>::calculateTreeHeight(node->getLeft);
-    if ()
+    // if ()
 }
 
 // Right rotation function
@@ -203,9 +203,10 @@ void AVLTree<Key, Value>::leftRotate(AVLNode<Key, Value>* node) {
       BinarySearchTree<Key, Value>::root_ = node;
    }
    else {
-      if (parent->getLeft() == node) {
-          parent->setLeft(xnode);
-      }
+    
+    if (parent->getLeft() == node) {
+        parent->setLeft(xnode);
+    }
       else {
           parent->setRight(xnode);
       }
