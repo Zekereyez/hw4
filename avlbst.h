@@ -265,6 +265,7 @@ void AVLTree<Key, Value>:: remove(const Key& key)
         // diff is the amoung added to update the balance of the parent
     // delete n and update the pointers
     // fix the tree calling removeFix(p, diff)
+    
 }
 
 template<class Key, class Value>
@@ -273,7 +274,6 @@ void AVLTree<Key, Value>::removeFix(AVLNode<Key, Value>* node, int diff) {
         return;
     }
     auto parent = node->getParent();
-
     int ndiff;
     if (parent != nullptr) {
         if (parent->getLeft() == node) {
@@ -295,7 +295,7 @@ void AVLTree<Key, Value>::removeFix(AVLNode<Key, Value>* node, int diff) {
             removeFix(parent, ndiff);
         }
         // case 1b
-        if (child->getBalance() == 0) {
+        else if (child->getBalance() == 0) {
             // zig zig case
             rightRotate(node);
             node->setBalance(-1);
@@ -303,7 +303,7 @@ void AVLTree<Key, Value>::removeFix(AVLNode<Key, Value>* node, int diff) {
             return;
         }
         // case 1c 
-        if (child->getBalance() == 1) {
+        else if (child->getBalance() == 1) {
             auto g = child->getRight();
             leftRotate(child);
             rightRotate(node);
@@ -335,8 +335,6 @@ void AVLTree<Key, Value>::removeFix(AVLNode<Key, Value>* node, int diff) {
         node->setBalance(0);
         removeFix(parent, ndiff);
     }
-
-
     // Case 4
     else if (node->getBalance() + diff == 2) {
         auto child = node->getRight();
@@ -349,7 +347,7 @@ void AVLTree<Key, Value>::removeFix(AVLNode<Key, Value>* node, int diff) {
             removeFix(parent, ndiff);
         }
         // case 4b
-        if (child->getBalance() == 0) {
+        else if (child->getBalance() == 0) {
             // zig zig case
             leftRotate(node);
             node->setBalance(1);
@@ -357,7 +355,7 @@ void AVLTree<Key, Value>::removeFix(AVLNode<Key, Value>* node, int diff) {
             return;
         }
         // case 4c 
-        if (child->getBalance() == 1) {
+        else if (child->getBalance() == 1) {
             auto g = child->getLeft();
             rightRotate(child);
             leftRotate(node);
