@@ -181,7 +181,7 @@ void AVLTree<Key, Value>::rightRotate(AVLNode<Key, Value>* node) {
   if (parent->getLeft() == node) {
     node->getParent()->setLeft(leftChild);
     // can we just node swap then swap so that the p is right child of n
-    nodeSwap(node, parent);
+    // nodeSwap(node, parent);
   }
   
 }
