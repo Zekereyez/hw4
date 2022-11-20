@@ -203,7 +203,7 @@ void AVLTree<Key, Value>::leftRotate(AVLNode<Key, Value>* node) {
       BinarySearchTree<Key, Value>::root_ = node;
    }
    else {
-    
+
     if (parent->getLeft() == node) {
         parent->setLeft(xnode);
     }
@@ -224,8 +224,8 @@ void AVLTree<Key, Value>::insert (const std::pair<const Key, Value> &new_item)
     // TODO - From bst
     // For insert we need to check the where the inserted KVP needs to be easy stuff
     // Extract information for the creation of new node 
-    Key key = keyValuePair.first;
-    Value value = keyValuePair.second;
+    Key key = new_item.first;
+    Value value = new_item.second;
 
     if (empty()) {
       // this means we can just insert into the tree
