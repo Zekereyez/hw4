@@ -177,7 +177,7 @@ void AVLTree<Key, Value>::rightRotate(AVLNode<Key, Value>* node) {
   }
   // need to check if parent has a parent aka g 
   // if so this means that g must point to child 
-  if (grandparent != nullptr && parent->getLeft() == node) {
+  if (parent->getLeft() == node) {
     node->getParent()->setLeft(leftChild);
     // can we just node swap then swap so that the p is right child of n
     nodeSwap(node, parent);
@@ -227,7 +227,7 @@ void AVLTree<Key, Value>::insert (const std::pair<const Key, Value> &new_item)
     Key key = new_item.first;
     Value value = new_item.second;
 
-    if (empty()) {
+    if (BinarySearchTree<Key, Value>::empty()) {
       // this means we can just insert into the tree
       this->root_ = new AVLNode<Key, Value> (key, value, nullptr);
     }
@@ -279,7 +279,7 @@ template<class Key, class Value>
 void AVLTree<Key, Value>:: remove(const Key& key)
 {
     // Find the node by walking the tree
-    AVLNode<Key, Value>* currNode = this->root_;
+    AVLNode<Key, Value>* currNode = static_cast<AVLNode<Key,Value>*>(this->root_);
     Node<Key, Value>* parentNode = nullptr;
     int diff;
     while (currNode != nullptr) {
@@ -298,7 +298,7 @@ void AVLTree<Key, Value>:: remove(const Key& key)
             // remove that node aka same as bst
             if (currNode->getRight() != nullptr && currNode->getLeft() != nullptr) {
                 // we swap with predecessor 
-                Node<Key, Value>* bestNode = predecessor(currNode);
+                Node<Key, Value>* bestNode = BinarySearchTree<Key, Value>::predecessor(currNode);
                 // the appropriate parents have been set for the nodes here 
                 // so there is no need to make any changes to them 
                 // Note: parentNode currently points to the parent of current
@@ -349,13 +349,13 @@ void AVLTree<Key, Value>:: remove(const Key& key)
                     this->root_ = currNode->getLeft();
                     // reset the parent of the node
                     // all other nodes are fine with the reassignment
-                    root_->setParent(nullptr);
+                    this->root_->setParent(nullptr);
                     delete currNode;
                     currNode = nullptr;
                 }
                 else if (currNode->getRight() != nullptr) {
                     this->root_ = currNode->getRight();
-                    root_->setParent(nullptr);
+                    this->root_->setParent(nullptr);
                     delete currNode;
                 }
                 else {
