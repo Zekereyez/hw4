@@ -16,7 +16,7 @@ struct KeyError { };
 * add additional data members or helper functions.
 */
 template <typename Key, typename Value>
-class AVLNode : public AVLNode<Key, Value>
+class AVLNode : public Node<Key, Value>
 {
 public:
     // Constructor/destructor.
@@ -29,7 +29,7 @@ public:
     void updateBalance(int8_t diff);
 
     // Getters for parent, left, and right. These need to be redefined since they
-    // return pointers to AVLNodes - not plain Nodes. See the AVLNode class in bst.h
+    // return pointers to AVLNodes - not plain Nodes. See the Node class in bst.h
     // for more information.
     virtual AVLNode<Key, Value>* getParent() const override;
     virtual AVLNode<Key, Value>* getLeft() const override;
@@ -51,7 +51,7 @@ protected:
 */
 template<class Key, class Value>
 AVLNode<Key, Value>::AVLNode(const Key& key, const Value& value, AVLNode<Key, Value> *parent) :
-    AVLNode<Key, Value>(key, value, parent), balance_(0)
+    Node<Key, Value>(key, value, parent), balance_(0)
 {
 
 }
@@ -172,7 +172,7 @@ void AVLTree<Key, Value>::rightRotate(AVLNode<Key, Value>* node) {
   auto rightChild = node->getRight();
   auto leftChild = node->getLeft();
   // need to account for root case
-  if (BinarySearchTree<Key, Value>::root_ == static_cast<AVLNode<Key, Value>*>(node)) {
+  if (BinarySearchTree<Key, Value>::root_ == static_cast<Node<Key, Value>*>(node)) {
     BinarySearchTree<Key, Value>::root_ = leftChild;
   }
   // need to check if parent has a parent aka g 
@@ -245,7 +245,7 @@ void AVLTree<Key, Value>::insert (const std::pair<const Key, Value> &new_item)
               // if there is no left node that means that this is where the inserted 
               // noded needs to be placed 
               else {
-                  // AVLNode<Key, Value>* freshNode = new AVLNode<Key, Value>* (key, value, root);
+                  // Node<Key, Value>* freshNode = new Node<Key, Value>* (key, value, root);
                   root->setLeft(new AVLNode<Key, Value> (key, value, root)); // the root should be the parent in this case here
                   return;
               }
@@ -257,7 +257,7 @@ void AVLTree<Key, Value>::insert (const std::pair<const Key, Value> &new_item)
                   root = rightNode;
               }
               else {
-                  // AVLNode<Key, Value>* freshNode = new AVLNode<Key, Value>* (key, value, root);
+                  // Node<Key, Value>* freshNode = new Node<Key, Value>* (key, value, root);
                   root->setRight(new AVLNode<Key, Value> (key, value, root));
                   return;
               }
