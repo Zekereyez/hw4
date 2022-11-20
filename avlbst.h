@@ -173,9 +173,9 @@ void AVLTree<Key, Value>::rightRotate(AVLNode<Key, Value>* node) {
   auto rightChild = node->getRight();
   auto leftChild = node->getLeft();
   // need to account for root case
-  if (BinarySearchTree<Key, Value>::root_ == static_cast<Node<Key, Value>*>(node)) {
-    BinarySearchTree<Key, Value>::root_ = leftChild;
-  }
+//   if (BinarySearchTree<Key, Value>::root_ == static_cast<Node<Key, Value>*>(node)) {
+//     BinarySearchTree<Key, Value>::root_ = leftChild;
+//   }
   // need to check if parent has a parent aka g 
   // if so this means that g must point to child 
   if (parent->getLeft() == node) {
@@ -201,7 +201,7 @@ void AVLTree<Key, Value>::leftRotate(AVLNode<Key, Value>* node) {
    // this means we can promote child and make the adjustments
    if (parent == nullptr) {
       // this means we are at the root and need to change
-      BinarySearchTree<Key, Value>::root_ = node;
+    //   BinarySearchTree<Key, Value>::root_ = node;
    }
    else {
 
