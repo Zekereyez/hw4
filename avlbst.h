@@ -165,8 +165,10 @@ void AVLTree<Key, Value>::rightRotate(AVLNode<Key, Value>* node) {
   // If we right rotate on a parent then this means promote the child of p as 
   // a child of the grandparent and then demote the parent to a child of its 
   // child node 
+
+  // OKOK Fuck all this noise for right rotate we are concered for the child 
+  // right subtree here so we can make the correct adjustments
   auto parent = node->getParent();
-  auto grandparent = parent->getParent();
   auto rightChild = node->getRight();
   auto leftChild = node->getLeft();
   // need to account for root case
@@ -186,6 +188,28 @@ void AVLTree<Key, Value>::rightRotate(AVLNode<Key, Value>* node) {
 // Left rotate function 
 template<class Key, class Value>
 void AVLTree<Key, Value>::leftRotate(AVLNode<Key, Value>* node) {
+    // for leftR we need to worry about the left child subtree so we 
+   // can make the correct pointer adjustments 
+   auto parent = node->getParent();
+   auto child = node->getRight();
+   auto xnode = child->getLeft();
+
+   child->setLeft(node);
+   node->setRight(xnode);
+   // child is the most volatile node in this situation so 
+   // this means we can promote child and make the adjustments
+   if (parent == nullptr) {
+      // this means we are at the root and need to change
+      BinarySearchTree<Key, Value>::root_ = node;
+   }
+   else {
+      if (parent->getLeft() == node) {
+          parent->setLeft(xnode);
+      }
+      else {
+          parent->setRight(xnode);
+      }
+   }
    
 }
 
@@ -254,18 +278,118 @@ template<class Key, class Value>
 void AVLTree<Key, Value>:: remove(const Key& key)
 {
     // Find the node by walking the tree
+    AVLNode<Key, Value>* currNode = this->root_;
+    Node<Key, Value>* parentNode = nullptr;
+    int diff;
+    while (currNode != nullptr) {
+        if (key < currNode->getKey()) {
+            parentNode = currNode;
+            currNode = currNode->getLeft();
+        }
+        else if (key > currNode->getKey()) {
+            parentNode = currNode;
+            currNode = currNode->getRight();
+        }
+        else {
+            // found node but many cases now
+            // case for two children 
+            // if the node has two children swap with the predecessor and then 
+            // remove that node aka same as bst
+            if (currNode->getRight() != nullptr && currNode->getLeft() != nullptr) {
+                // we swap with predecessor 
+                Node<Key, Value>* bestNode = predecessor(currNode);
+                // the appropriate parents have been set for the nodes here 
+                // so there is no need to make any changes to them 
+                // Note: parentNode currently points to the parent of current
+                // location and we need to update accordingly when swapped
+                nodeSwap(currNode, bestNode);
+                parentNode = currNode->getParent();
+                Node<Key, Value>* childNode;
+                // no children on swap case
+                if (currNode->getLeft() == nullptr && currNode->getRight() == nullptr) {
+                    childNode = nullptr;
+                }
+                // otherwise then the node must have at least one node by definition
+                else if (currNode->getLeft() != nullptr) {
+                    childNode = currNode->getLeft();
+                }
+                else if (currNode->getRight() != nullptr) {
+                    childNode = currNode->getRight();
+                }
+                if (parentNode == nullptr) {
+                    this->root_ = childNode;
+                }
+                else {
+                    if (parentNode->getLeft() == currNode) {
+                        // do something here
+                        // delete currNode;
+                        parentNode->setLeft(childNode);
+                        diff = 1;
+                    }
+                    else {
+                        // do the opposite
+                        // delete currNode;
+                        parentNode->setRight(childNode);
+                        diff = -1;
+                    }
+                    // delete currNode;
+                }
+                if (childNode != nullptr) {
+                    childNode->setParent(parentNode);
+                }
+                delete currNode;
+                currNode = nullptr;
+            }
+            else if (parentNode == nullptr) {
+                // if no parent ie root node removal case
+                if (currNode->getLeft() != nullptr) {
+                    // Can I set the root to the next node then
+                    // delete the currNode so that it removes?
+                    this->root_ = currNode->getLeft();
+                    // reset the parent of the node
+                    // all other nodes are fine with the reassignment
+                    root_->setParent(nullptr);
+                    delete currNode;
+                    currNode = nullptr;
+                }
+                else if (currNode->getRight() != nullptr) {
+                    this->root_ = currNode->getRight();
+                    root_->setParent(nullptr);
+                    delete currNode;
+                }
+                else {
+                    // set root to null then return 
+                    this->root_ = nullptr;
+                    return; // easy with a single node tree
+                }
+            }
+            else if (parentNode->getLeft() == currNode) {
+                diff = 1;
+                if (currNode->getLeft() != nullptr) {
+                    parentNode->setLeft(currNode->getLeft());
+                }
+                else {
+                    parentNode->setRight(currNode->getRight());
 
-    // if the node has two children swap with the predecessor and then 
-    // remove that node aka same as bst
-
-    // from ther we get the parent of the node 
-    // if parent is not null more if statement
-        // if n is a left child then let diff += 1
-        // if n is a right child then let diff -= 1
-        // diff is the amoung added to update the balance of the parent
-    // delete n and update the pointers
-    // fix the tree calling removeFix(p, diff)
-    
+                }
+                delete currNode;
+                currNode = nullptr;
+            }
+            else if (parentNode->getRight() == currNode) {
+                diff = -1;
+                if (currNode->getLeft() != nullptr) {
+                    parentNode->setLeft(currNode->getLeft());
+                }
+                else {
+                    parentNode->setRight(currNode->getRight());
+                }
+                delete currNode;
+                currNode = nullptr;
+            }
+        }
+        removeFix(parentNode, diff);
+        return; // work is all done here 
+    }
 }
 
 template<class Key, class Value>
