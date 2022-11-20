@@ -141,9 +141,20 @@ protected:
     static AVLNode<Key, Value>* blah ();
     static void rightRotate(AVLNode<Key, Value>* node);
     static void leftRotate(AVLNode<Key, Value>* node);
-
+    static void findBalance(AVLNode<Key, Value>* node);
+    static void removeFix(AVLNode<Key, Value>* node, int diff);
 
 };
+template<class Key, class Value>
+void AVLTree<Key, Value>::findBalance(AVLNode<Key, Value>* node) {
+    if (node = nullptr) {
+        return;
+    }
+    int8_t balance = (int8_t)BinarySearchTree<Key, Value>::calculateTreeHeight(node->getRight) 
+    - BinarySearchTree<Key, Value>::calculateTreeHeight(node->getLeft);
+    if ()
+}
+
 // Right rotation function
 template<class Key, class Value>
 void AVLTree<Key, Value>::rightRotate(AVLNode<Key, Value>* node) {
@@ -155,16 +166,21 @@ void AVLTree<Key, Value>::rightRotate(AVLNode<Key, Value>* node) {
   // a child of the grandparent and then demote the parent to a child of its 
   // child node 
   auto parent = node->getParent();
+  auto grandparent = parent->getParent();
   auto rightChild = node->getRight();
   auto leftChild = node->getLeft();
+  // need to account for root case
+  if (BinarySearchTree<Key, Value>::root_ == static_cast<Node<Key, Value>*>(node)) {
+    BinarySearchTree<Key, Value>::root_ = leftChild;
+  }
   // need to check if parent has a parent aka g 
   // if so this means that g must point to child 
-  if (parent->getParent() != nullptr && parent->getLeft() == node) {
+  if (grandparent != nullptr && parent->getLeft() == node) {
     node->getParent()->setLeft(leftChild);
     // can we just node swap then swap so that the p is right child of n
     nodeSwap(node, parent);
-    
   }
+  
 }
 
 // Left rotate function 
@@ -237,7 +253,143 @@ void AVLTree<Key, Value>::insert (const std::pair<const Key, Value> &new_item)
 template<class Key, class Value>
 void AVLTree<Key, Value>:: remove(const Key& key)
 {
-    // TODO
+    // Find the node by walking the tree
+
+    // if the node has two children swap with the predecessor and then 
+    // remove that node aka same as bst
+
+    // from ther we get the parent of the node 
+    // if parent is not null more if statement
+        // if n is a left child then let diff += 1
+        // if n is a right child then let diff -= 1
+        // diff is the amoung added to update the balance of the parent
+    // delete n and update the pointers
+    // fix the tree calling removeFix(p, diff)
+}
+
+template<class Key, class Value>
+void AVLTree<Key, Value>::removeFix(AVLNode<Key, Value>* node, int diff) {
+    if (node == nullptr) {
+        return;
+    }
+    auto parent = node->getParent();
+
+    int ndiff;
+    if (parent != nullptr) {
+        if (parent->getLeft() == node) {
+            ndiff = 1;
+        }
+        else if (parent->getRight() == node) {
+            ndiff = -1;
+        }
+    }
+    // Case 1
+    if (node->getBalance() + diff == -2) {
+        auto child = node->getLeft();
+        // case 1a
+        if (child->getBalance() == -1) {
+            // zig zag case here 
+            rightRotate(node);
+            node->setBalance(0);
+            child->setBalance(0);
+            removeFix(parent, ndiff);
+        }
+        // case 1b
+        if (child->getBalance() == 0) {
+            // zig zig case
+            rightRotate(node);
+            node->setBalance(-1);
+            child->setBalance(1);
+            return;
+        }
+        // case 1c 
+        if (child->getBalance() == 1) {
+            auto g = child->getRight();
+            leftRotate(child);
+            rightRotate(node);
+            if (g->getBalance() == 1) {
+                node->setBalance(0);
+                child->setBalance(-1);
+                g->setBalance(0);
+            }
+            else if (g->getBalance() == 0) {
+                node->setBalance(0);
+                child->setBalance(0);
+                g->setBalance(0);
+            }
+            else if (g->getBalance() == -1) {
+                node->setBalance(1);
+                child->setBalance(0);
+                g->setBalance(0);
+            }
+            removeFix(parent, ndiff);
+        }
+    }
+    // Case 2
+    else if (node->getBalance() + diff == -1) {
+        node->setBalance(-1);
+        return;
+    }
+    // Case 3
+    else if (node->getBalance() + diff == 0) {
+        node->setBalance(0);
+        removeFix(parent, ndiff);
+    }
+
+
+    // Case 4
+    else if (node->getBalance() + diff == 2) {
+        auto child = node->getRight();
+        // case 4a
+        if (child->getBalance() == 1) {
+            // zig zag case here 
+            leftRotate(node);
+            node->setBalance(0);
+            child->setBalance(0);
+            removeFix(parent, ndiff);
+        }
+        // case 4b
+        if (child->getBalance() == 0) {
+            // zig zig case
+            leftRotate(node);
+            node->setBalance(1);
+            child->setBalance(-1);
+            return;
+        }
+        // case 4c 
+        if (child->getBalance() == 1) {
+            auto g = child->getLeft();
+            rightRotate(child);
+            leftRotate(node);
+            if (g->getBalance() == -1) {
+                node->setBalance(0);
+                child->setBalance(1);
+                g->setBalance(0);
+            }
+            else if (g->getBalance() == 0) {
+                node->setBalance(0);
+                child->setBalance(0);
+                g->setBalance(0);
+            }
+            else if (g->getBalance() == 1) {
+                node->setBalance(-1);
+                child->setBalance(0);
+                g->setBalance(0);
+            }
+            removeFix(parent, ndiff);
+        }
+    }
+    // Case 5
+    else if (node->getBalance() + diff == 1) {
+        node->setBalance(-1);
+        return;
+    }
+    // Case 6
+    else if (node->getBalance() + diff == 0) {
+        node->setBalance(0);
+        removeFix(parent, ndiff);
+    }
+
 }
 
 template<class Key, class Value>
